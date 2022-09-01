@@ -1,0 +1,159 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+article{
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    top: 10vh;
+}
+article #bg-style{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ffffff 25%, transparent 25%), linear-gradient(315deg, #ffffff 25%, transparent 25%) ,linear-gradient(45deg, transparent 24%,#ff7373 25%, #ff7373 30%, transparent 31%, transparent 39%,#ff7373 40%, #ff7373 45%, transparent 45%),linear-gradient(315deg, transparent 24%,#ff7373 25%, #ff7373 30%, transparent 31%, transparent 39%,#ff7373 40%, #ff7373 45%, transparent 45%);
+    background-size: 6em 6em;
+    background-color: #ffffff;
+    opacity: 1;
+}
+article #card-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 90%;
+    height: 90%;
+    background: linear-gradient(90deg,transparent 50%,#829dfa 50%);
+    background-size: 4em 4em;
+    background-color: #ffffff;
+    opacity: 1;
+    box-shadow: 0 10px 30px 10px rgba(0, 0, 0, 0.4);
+    cursor: default;
+}
+article #card-container #container{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-evenly ;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 100%;
+    transform: translate(-50%,-50%);
+    background-color: #ffffff;
+    font-weight: 600;
+    word-break: break-all;
+}
+article #card-container #avatar{
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+article #card-container #avatar img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: bottom;
+    border:1px solid rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+}
+article #card-container #avatar #upload-button{
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    left: 110%;
+    top: 40%;
+    transform: translateY(-50%);
+    text-align: center;
+    background-color: white;
+    border: 1px solid rgba(16, 81, 221,0.8);
+    color:rgba(16, 81, 221,0.8);
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 15px;
+}
+article #card-container #avatar>span{
+    position: absolute;
+    width: 100px;
+    left: 100%;
+    top: 60%;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+article #card-container .user-data{
+    position: relative;
+    left: 10%;
+    width: 80%;
+    align-self: flex-start;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;  
+    box-sizing: border-box!important;
+}
+article #card-container #about-sign{
+    height: 15%;
+}
+article #card-container #about-info{
+    height: 40%;
+}
+article #card-container #about-sign .second-span{
+    overflow: auto;
+}
+article #card-container #about-info .second-span{
+    overflow: auto;
+}
+article #card-container .user-data .first-span{
+    width: 20%;
+    padding: 10px 0px;
+
+}
+article #card-container .user-data .second-span{
+    width: 75%;
+    padding: 10px 0px;
+}
+
+article #card-container .user-data>textarea{
+    width: 75%;
+    height: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+    border: none;
+    outline: 1px solid #FF8066;
+    padding: 0px 10px;
+    resize: none;
+}
+
+article #card-container #button-container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 60%;
+}
+article #card-container #button-container button{
+    position: relative;
+    width: 80px;
+    height: 30px;
+    background-color:#FF8066;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 15px;
+    font-weight: 500;
+    color:white;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+article #button-container #cancel-change-button {
+    color:#FF8066!important;
+    background-color:white!important;
+}
+

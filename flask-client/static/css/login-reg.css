@@ -1,0 +1,152 @@
+*{
+    padding: 0;
+    margin: 0;
+    outline: none;
+    border:none;
+}
+body{
+    height:100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(31,32,41);
+}
+::placeholder{
+    color: rgba(255,255,255,0.6);
+}
+.shell{
+    width:450px;
+    height: 550px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    perspective: 1000px;
+    /* 加上视距让3d效果明显 */
+}
+.top{
+    width: 100%;
+    display: flex;
+    cursor: pointer;
+    justify-content: space-evenly;
+}
+.signstatus{
+    color: #fff;
+    transition: 0.5s;
+    font:300 20px '';
+    opacity: 0.3;
+}
+.highlight{
+    opacity: 1;
+}
+#switch{
+    width: 60px;
+    height: 25px;
+    background-color: rgb(255,235,167);
+    border-radius: 20px;
+    position: relative;
+}
+#ball{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: rgb(46,45,56);
+    border-radius: 50%;
+    transition: 0.5s;
+    box-shadow: 0 0 10px #000;
+    left: -1px;
+}
+#ball.ballon{
+    left: 36px;
+}
+.bottom{
+    width: 100%;
+    height: 450px;
+    background-color: rgb(28,28,28);
+    transform-style:preserve-3d ;
+    /* 让子元素呈现3d效果 */
+    position: relative;
+    transition:0.7s;
+    border-radius: 5px;
+
+}
+.bottom>div{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.bottom>div h2{
+    color: #fff;
+}
+.bottom>div input{
+    width: 250px;
+    height: 25px;
+    padding: 0,10px;
+    background-color: rgb(31,32,41);
+    color:#fff;
+}
+.bottom .clear{
+    font-size: 16px;
+    color: rgba(255,255,255,0.8);
+}
+.tip{
+   position: fixed;
+   padding: 0px 10px;
+   border: 1px solid #b3c9ce;
+   border-radius: 4px;
+   text-align: center;
+   color: #333;
+   background: #fff;
+   box-shadow: 3px 3px 3px rgba(0, 0, 0, .3);
+}
+.bottom .clear:hover{
+    cursor: pointer;
+}
+.bottom>div button{
+    cursor: pointer;
+}
+#sms_button{
+    width: 250px;
+    height: 25px;
+    color: #333;
+    border-radius: 4px;
+}
+#sms_button:disabled{
+    cursor:default;
+    background-color: white;
+    opacity: 0.5;
+}
+#signup_button,#signin_button{
+    width: 80px;
+    height: 30px;
+    color: #333;
+    background-color: rgb(255,235,167);
+    border-radius: 4px;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+#signup_button:hover,#signin_button:hover{
+    transition:0.3s;
+    transform: scale(1.1);
+}
+.signin{
+    transform: translateZ(70px);
+}
+.signup{
+    transform: translateZ(-70px) rotateY(180deg);
+    position: absolute;
+    top: 0;
+}
+
+@media screen and (max-width:480px){
+    .shell{
+        width: 100%;
+        height: 75%;
+    }
+    .bottom{
+        height: 80%;
+    }
+}

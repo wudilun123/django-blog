@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/login-reg.css">
+    <script type="module" src='/static/js/login-reg.js'></script>
+    <title>登录/注册</title>
+</head>
+
+<body>
+    <div class="shell">
+        <div class="top">
+            <span class="signstatus highlight">SIGN IN</span>
+            <div id="switch">
+                <div id="ball"></div>
+            </div>
+            <span class="signstatus">SIGN UP</span>
+        </div>
+        <div class="bottom">
+            <div class="signin">
+                <h2>登录</h2>
+                <div>
+                    <input type="text" name="username" placeholder=用户名: required maxlength="11"
+                        data-tip="可输入英文字母和数字，长度为6-11个字符" onkeyup="this.value=this.value.replace(/[\W]|_/g,'')"
+                        onpaste="this.value=this.value.replace(/[\W]|_/g,'')">
+                    <span class="clear">[×]</span>
+                </div>
+                <div>
+                    <input type="text" name="password" placeholder="密码:" required maxlength="16"
+                        data-tip="可输入英文字母、数字以及以下英文符号:@#*-+=,. 长度为6-16个字符"
+                        onkeyup="this.value=this.value.replace(/[^0-9a-zA-Z@#*\-+=,.]/g,'')"
+                        onpaste="this.value=this.value.replace(/[^0-9a-zA-Z@#*\-+=,.]/g,'')">
+                    <span class="clear">[×]</span>
+                </div>
+                <button id="signin_button">立即登录</button>
+            </div>
+            <div class="signup">
+                <h2>注册</h2>
+                <div>
+                    <input type="text" name="username" placeholder="用户名:" required maxlength="11"
+                        data-tip="可输入英文字母和数字，长度为6-11个字符" onkeyup="this.value=this.value.replace(/[\W]|_/g,'')"
+                        onpaste="this.value=this.value.replace(/[\W]|_/g,'')">
+                    <span class="clear">[×]</span>
+                </div>
+                <div>
+                    <input type="password" name="password" placeholder="请输入密码:" required maxlength="16"
+                        data-tip="可输入英文字母、数字以及以下英文符号:@#*-+=,. 长度为6-16个字符"
+                        onkeyup="this.value=this.value.replace(/[^0-9a-zA-Z@#*\-+=,.]/g,'')"
+                        onpaste="this.value=this.value.replace(/[^0-9a-zA-Z@#*\-+=,.]/g,'')">
+                    <span class="clear">[×]</span>
+                </div>
+                <div>
+                    <input type="password" name="password_re" placeholder="请再次输入密码:" required maxlength="16"
+                        data-tip="可输入英文字母、数字以及以下英文符号:@#*-+=,. 长度为6-16个字符"
+                        onkeyup="this.value=this.value.replace(/[^0-9a-zA-Z@#*\-+=,.]/g,'')"
+                        onpaste="this.value=this.value.replace(/[^0-9a-zA-Z@#*\-+=,.]/g,'')">
+                    <span class="clear">[×]</span>
+                </div>
+                <div>
+                    <input type="email" name="email" placeholder="请输入邮箱" required>
+                    <span class="clear">[×]</span>
+                </div>
+                <div>
+                    <input type="tel" class="phone" name="phone" placeholder="请输手机号" required maxlength="11"
+                        onkeyup="this.value=this.value.replace(/[\D]/g,'')"
+                        onpaste="this.value=this.value.replace(/[\D]/g,'')">
+                    <span class="clear">[×]</span>
+                </div>
+                <div>
+                    <input type="text" class="sms_num" name="sms_num" placeholder="请输入验证码" required maxlength="6"
+                        onkeyup="this.value=this.value.replace(/[\D]/g,'')"
+                        onpaste="this.value=this.value.replace(/[\D]/g,'')">
+                    <span class="clear">[×]</span>
+                </div>
+                <div>
+                    <button id="sms_button">免费获取验证码</button>
+                    <span style="visibility: hidden;">[×]</span>
+                </div>
+                <button id="signup_button">立即注册</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

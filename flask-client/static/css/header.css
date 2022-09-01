@@ -1,0 +1,119 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+nav {
+  position: fixed;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width:100%;
+  height: 10%;
+  background: #fff;
+  border-radius: 0 0 20px 20px;
+  border:1px solid rgba(0, 0, 0, 0.2);
+  border-top: none;
+  box-shadow: 0 25px 10px -25px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+nav #nav-menu{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-basis: 60%;
+}
+nav #menu-button{
+  display: none;
+}
+nav .menu-button{
+  display: none;
+}
+nav #nav-menu>li {
+  width: 20%;
+  list-style: none;
+  padding: 10px 0px;
+  margin: 0px 20px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #777;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.5s;
+  text-align: center;
+}
+nav #nav-menu>li::after {
+  content: '';
+  background: #FF8066;
+  width: 10%;
+  height: 10%;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  opacity: 0;
+  transition: all 0.4s ease-out;
+}
+nav #nav-menu>li:hover{
+  color: #fff;
+}
+nav #nav-menu>li:hover::after{
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+@media screen and (max-width:768px){
+  nav {
+    position: fixed;
+    display: inline-block;
+  }
+  nav .menu-button{
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    cursor: pointer;
+    transform: translate(-50%,-50%);
+  }
+  nav #nav-menu{
+    display: flex;
+    position: absolute;
+    top: -300%;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    border-radius: 0 0 5px 5px;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    border-top: none;
+    opacity: 0;
+    transition: all 0.4s ease-out;
+    background-color:rgba(0, 0, 0, 0.8);
+  }
+  nav #nav-menu>li {
+    width: 100%;
+    color: white;
+  }
+  nav #nav-menu>li:hover::after{
+    border-radius: 0;
+    z-index: -1;
+  }
+  nav>div{
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  nav #logo{
+    left: 20px;
+  }
+  nav #nav-user-link{
+    right: 20px;
+  }
+  nav #menu-button:checked ~ #nav-menu{
+    top: 100%;
+    opacity: 1;
+  }
+}

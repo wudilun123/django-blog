@@ -1,0 +1,6 @@
+.idea
+.vscode
+settings.py
+blog/media/avatar/*
+blog/media/temp/*
+*.pyc

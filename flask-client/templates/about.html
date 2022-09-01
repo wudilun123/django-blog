@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/css/article.css">
+  <link rel="stylesheet" href="/static/css/header.css">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+  <script type="module" src="/static/js/about.js"></script>
+  <title>个人详情</title>
+</head>
+
+<body>
+  <nav>
+    <div id="logo">LOGO</div>
+    <input type="checkbox" id="menu-button">
+    <label class="menu-button" for="menu-button">
+      <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </label>
+    <ul id="nav-menu">
+      <li>Home</li>
+      <li>Services</li>
+      <li>Products</li>
+      <li>Clients</li>
+      <li>Contact</li>
+    </ul>
+    <div id="nav-user-link"><a href="/login-reg/">登录/注册</a></div>
+  </nav>
+  <article>
+    <div id="bg-style"></div>
+    <div id="card-container">
+      <div id="container">
+        <div id="avatar">
+          <img>
+          <button id="upload-button" hidden>上传头像</button>
+          <span hidden>大小限制200KB</span>
+          <input id="upload-img" type="file" hidden accept="image/*">
+        </div>
+        <div id="about-nickname" class="user-data">
+          <span class="first-span">用户昵称:</span> <span class="second-span"></span>
+          <textarea name="nickname" hidden maxlength="11" placeholder="长度限制为11个字符"></textarea>
+        </div>
+        <div id="about-sign" class="user-data">
+          <span class="first-span">个性签名:</span> <span class="second-span"></span>
+          <textarea name="sign" hidden maxlength="50" placeholder="长度限制为50个字符"></textarea>
+        </div>
+        <div id="about-year" class="user-data">
+          <span class="first-span">注册时间:</span><span class="second-span"></span>
+        </div>
+        <div id="about-info" class="user-data">
+          <span class="first-span">个人简介:</span><span class="second-span"></span>
+          <textarea name="info" hidden maxlength="150" placeholder="长度限制为150个字符"></textarea>
+        </div>
+        <div id="button-container">
+          <button id="cancel-change-button" hidden>取消修改</button>
+          <button id="change-button" hidden>修改资料</button>
+          <button id="submit-change-button" hidden>提交修改</button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+</body>
+
+</html>
