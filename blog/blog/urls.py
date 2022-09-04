@@ -21,8 +21,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test_cors/', views.test_cors),
-    path('v1/users/',include('user.urls'))
+    path('v1/users/',include('user.urls')),
+    path('v1/topics/',include('topic.urls')),
 ]
 
 urlpatterns +=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

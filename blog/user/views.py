@@ -10,8 +10,8 @@ import hashlib, jwt
 import magic
 import json, time, re
 from tools.logging_decorator import logging_check
-from tools.sms import SMS
 from .tasks import send_sms
+from topic.models import Category
 
 # 校验用到的正则式
 username_regexp = re.compile("[0-9a-zA-Z]{6,11}$")
@@ -24,7 +24,7 @@ sign_regexp = re.compile(".{0,50}$")
 info_regexp = re.compile(".{0,150}$")
 
 
-def make_token(username, expire=3600 * 24 * 7):
+def make_token(username, expire=settings.JWT_EXPIRE_TIME):
     key = settings.JWT_TOKEN_KEY
     time_now = time.time()
     payload_data = {'username': username, 'exp': expire + time_now}
@@ -73,11 +73,12 @@ def handle_reg_data(json_dict):
     p_m = hashlib.md5()
     p_m.update(password.encode())
     try:
-        UserProfile.objects.create(username=username, nickname=username, password=p_m.hexdigest(), email=email,
-                                   phone=phone)
+        user = UserProfile.objects.create(username=username, nickname=username, password=p_m.hexdigest(), email=email,
+                                          phone=phone)
     except (Exception) as e:
         return {'code': 10140, 'error': '用户创建失败，请重试！'}
     cache.delete(cache_key)  # 注册账号的同时删除验证码
+    Category.objects.create(user=user)  # 为每个账号创建一个默认分类
     token = make_token(username)
     return {'code': 200, 'username': username, 'data': {'token': token}}
 
@@ -107,8 +108,6 @@ def handle_login_data(json_dict):
 
 def handle_change_info(request, visited_username):
     user = request.logging_user
-    print(user.username)
-    print(visited_username)
     if (user.username != visited_username):
         # 修改的不是当前登录用户的资料
         return {'code': 10400, 'error': '无修改权限！'}
@@ -149,7 +148,7 @@ def handle_change_info(request, visited_username):
     return {'code': 200}
 
 
-# 用celery实现，避免阻塞
+# 改用celery实现，避免阻塞
 # def send_sms(phone, code):
 #     sms = SMS(**settings.SMS_CONFIG)
 #     res = sms.run(phone, code)

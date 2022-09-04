@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发表博客</title>
+    <script src="/static/js/wangEditor.js"></script>
+    <script type="module" src="/static/js/release.js"></script>
+    <link rel="stylesheet" href='/static/css/header.css'>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href='/static/css/wangEditor.css'>
+    <link rel="stylesheet" href='/static/css/wangEditorStyle.css'>
+    <link rel="stylesheet" href='/static/css/release.css'>
+</head>
+
+<body>
+    <nav>
+        <div id="logo">LOGO</div>
+        <input type="checkbox" id="menu-button">
+        <label class="menu-button" for="menu-button">
+            <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+        </label>
+        <ul id="nav-menu">
+            <li>Home</li>
+            <li>Services</li>
+            <li>Products</li>
+            <li>Clients</li>
+            <li>Contact</li>
+        </ul>
+        <div id="nav-user-link"><a href="/login-reg/">登录/注册</a></div>
+    </nav>
+    <article>
+        <div id="header-wrapper">
+            <!--  -->
+            <span>目录</span>
+            <ul id="header-container">
+            </ul>
+        </div>
+        <div id="editor—wrapper">
+            <div id="editor-toolbar">
+            </div>
+            <div id="editor-text-area">
+            </div>
+        </div>
+
+    </article>
+    <button id="release-button">发表本文</button>
+    <div class='mask'>
+        <div id="release-container">
+            <div id='close-button'>×</div>
+            <input type="text" name="title" placeholder="文章标题，不超过20字" maxlength="20">
+            <div id="category-container">
+                <span>文章分类：</span>
+                <select name="category" id="category">
+                    <option value="default">default</option>
+                </select>
+                <button id='onoff-make-category'>新建分类</button>
+            </div>
+            <div id='make-category-container' hidden>
+                <input type="text" id='new-category' name="new-category" placeholder="新建文章分类，不超过15字" maxlength="15">
+                <div>
+                    <button id='make-category'>新建</button>
+                    <button id='cancel-make-category'>取消</button>
+                </div>
+            </div>
+            <div id='limit-container'>
+                <span>文章权限：</span>
+                <div>
+                    <input type="radio" name='limit' id='public' value="public" checked>
+                    <label for="public">公共</label>
+                </div>
+                <div>
+                    <input type="radio" name='limit' id='private' value="private">
+                    <label for="private">私有</label>
+                </div>
+            </div>
+            <button id='make-topic'>发表</button>
+        </div>
+    </div>
+</body>
+
+</html>

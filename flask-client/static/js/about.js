@@ -2,12 +2,12 @@
 
 import { MyAlert } from './myAlert.js'
 
+const blankStrRegexp = /^\s*$/;//纯空白字符串的正则,JS把' '这样的字符串也视为true
 const username = localStorage.getItem('username');//当前登录用户
 const token = localStorage.getItem('blogToken');
 const baseUrl = 'http://127.0.0.1:8000';
 const myAlert = new MyAlert();
 const aboutUsername = window.location.href.match(/\/([^\/]+)\/info/)[1];//当前页面所属用户
-
 const avatarImg = document.querySelector('#avatar img');
 const logo = document.querySelector('#logo');
 const changeButton = document.querySelector('#change-button');
@@ -226,7 +226,7 @@ function submitChange() {
 
 function checkSubmitInfo() {
     //校验要提交的信息，不符合规则提示信息并返回false，反之返回true
-    if (!aboutNickname.children[2].value) {
+    if (blankStrRegexp.test(aboutNickname.children[2].value)) {
         myAlert.showAlert('用户昵称不能为空！', () => aboutNickname.children[2].focus());
         return false;
     }
@@ -242,7 +242,7 @@ function handlePostResponse(jsonResponse) {
             myAlert.showAlert(jsonResponse.error, () => {
                 localStorage.removeItem('blogToken');
                 localStorage.removeItem('username');
-                window.location.href = '/login-reg/'
+                window.location.href = '/login-reg/';
             });
             break;
         case 10400:

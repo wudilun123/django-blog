@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     username = models.CharField(max_length=11, verbose_name='用户名', primary_key=True)
     nickname = models.CharField(max_length=30, verbose_name='昵称', unique=True)
     password = models.CharField(max_length=32)
-    email = models.EmailField(verbose_name='邮箱')
+    email = models.EmailField(verbose_name='邮箱',db_collation='utf8mb4_bin')
     phone = models.CharField(max_length=11, verbose_name='手机号')
     avatar = models.ImageField(upload_to='avatar', null=True)
     sign = models.CharField(max_length=50, verbose_name='个人签名', default=get_default_sign)

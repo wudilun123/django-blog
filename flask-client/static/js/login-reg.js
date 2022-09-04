@@ -3,6 +3,8 @@
 import { MyAlert } from './myAlert.js'
 
 const baseUrl = 'http://127.0.0.1:8000';
+const currentUrl = new URL(window.location.href);//当前页面的URL对象
+const nextUrl = currentUrl.searchParams.get('next');//如果存在则登录后跳转至此url
 const smsButton = document.getElementById('sms_button');
 const classTop = document.querySelector('.top');
 const ball = document.querySelector('#ball');
@@ -15,6 +17,7 @@ const passwordRegexp = /[0-9a-zA-Z@#*\-+=,.]{6,16}$/;
 const emailRegexp = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
 const phoneRegexp = /[\d]{11}$/;
 const smsNumRegexp = /[\d]{6}$/;
+const blankStrRegexp = /^\s*$/;//纯空白字符串的正则,JS把' '这样的字符串也视为true
 
 class ValidationError extends Error {
     constructor(message, elem) {
@@ -104,7 +107,7 @@ smsButton.onclick = function () {
         const phone = document.querySelector(".signup input[name=phone]");
         if (!phoneRegexp.test(phone.value)) {
             //检查手机号格式
-            if (!phone.value) throw new ValidationError("手机号不能为空！", phone);
+            if (blankStrRegexp.test(phone.value)) throw new ValidationError("手机号不能为空！", phone);
             throw new ValidationError("手机号格式不正确！", phone);
         }
         const response = await fetch(baseUrl + '/v1/users/sms/', {
@@ -197,11 +200,11 @@ function checkSigninInfo({
 }) {
     //正则检查登录输入是否合法并抛出对应error，参数是对应的input元素
     if (!usernameRegexp.test(username.value)) {
-        if (!username.value) throw new ValidationError("用户名不能为空！", username);
+        if (blankStrRegexp.test(username.value)) throw new ValidationError("用户名不能为空！", username);
         throw new ValidationError("用户名格式不正确！", username);
     }
     if (!passwordRegexp.test(password.value)) {
-        if (!password.value) throw new ValidationError("密码不能为空！", password);
+        if (blankStrRegexp.test(password.value)) throw new ValidationError("密码不能为空！", password);
         throw new ValidationError("密码格式不正确！", password);
     }
 
@@ -217,28 +220,28 @@ function checkSignupInfo({
 }) {
     //检查注册输入是否合法并抛出对应error，参数是对应的input元素，写法有待优化
     if (!usernameRegexp.test(username.value)) {
-        if (!username.value) throw new ValidationError("用户名不能为空！", username);
+        if (blankStrRegexp.test(username.value)) throw new ValidationError("用户名不能为空！", username);
         throw new ValidationError("用户名格式不正确！", username);
     }
     if (!passwordRegexp.test(password.value)) {
-        if (!password.value) throw new ValidationError("密码不能为空！", password);
+        if (blankStrRegexp.test(password.value)) throw new ValidationError("密码不能为空！", password);
         throw new ValidationError("密码格式不正确！", password);
     }
     if (password.value != passwordRe.value) throw new ValidationError("两次输入的密码不一致！", passwordRe);
     if (!passwordRegexp.test(passwordRe.value)) {
-        if (!passwordRe.value) throw new ValidationError("再次输入的密码不能为空！", passwordRe);
+        if (blankStrRegexp.test(passwordRe.value)) throw new ValidationError("再次输入的密码不能为空！", passwordRe);
         throw new ValidationError("再次输入的密码格式不正确！", passwordRe);
     }
     if (!emailRegexp.test(email.value)) {
-        if (!email.value) throw new ValidationError("邮箱不能为空！", email);
+        if (blankStrRegexp.test(email.value)) throw new ValidationError("邮箱不能为空！", email);
         throw new ValidationError("邮箱格式不正确！", email);
     }
     if (!phoneRegexp.test(phone.value)) {
-        if (!phone.value) throw new ValidationError("手机号不能为空！", phone);
+        if (blankStrRegexp.test(phone.value)) throw new ValidationError("手机号不能为空！", phone);
         throw new ValidationError("手机号格式不正确！", phone);
     }
     if (!smsNumRegexp.test(smsNum.value)) {
-        if (!smsNum.value) throw new ValidationError("验证码不能为空！", smsNum);
+        if (blankStrRegexp.test(smsNum.value)) throw new ValidationError("验证码不能为空！", smsNum);
         throw new ValidationError("验证码格式不正确！", smsNum);
     }
 }
@@ -248,7 +251,9 @@ function handleSigninResponse(jsonResponse, signinInfo) {
     if (jsonResponse.code == 200) {
         localStorage.setItem('blogToken', jsonResponse.data.token);
         localStorage.setItem('username', jsonResponse.username);
-        myAlert.showAlert("登录成功！");
+        myAlert.showAlert("登录成功！", () => {
+            if (nextUrl) window.location.href = nextUrl;
+        });
     } else {
         switch (jsonResponse.code) {
             case 10200: case 10201: case 10202: case 10203: case 10210: case 10220:

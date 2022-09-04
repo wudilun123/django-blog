@@ -16,7 +16,6 @@ def logging_check(func):
         except Exception as e:
             result = {'code': 403, 'error': '请登录！'}
             return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
-
         username = res['username']
         request.logging_user = UserProfile.objects.get(username=username)
         return func(request, *args, **kwargs)

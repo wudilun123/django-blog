@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        #release-container {
+            width: 400px;
+            height: 400px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: repeating-linear-gradient(135deg, #8fbfff 0, #8fbfff 10%, transparent 0, transparent 50%);
+            background-size: 5em 5em;
+            background-color: #fefff7;
+            opacity: 0.9;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            font-size: 18px;
+            cursor: default;
+            box-sizing: content-box;
+        }
+
+        #close-button {
+            position: absolute;
+            right: 8px;
+            top: 0;
+            font-size: 30px;
+            cursor: pointer;
+            color: rgb(0, 0, 0);
+        }
+
+        input[name='title'] {
+            width: 70%;
+            font-size: 18px;
+            display: inline-block;
+            border: 1px solid rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            padding: 1px 2px;
+        }
+
+        #category-container {
+            display: flex;
+            width: 70%;
+            justify-content: space-between;
+        }
+
+        #category-container>select {
+            border-radius: 5px;
+            width: 110px;
+        }
+
+        #onoff-make-category {
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid black;
+            font-size: 15px;
+            font-weight: 500;
+            color: #FF8066;
+            cursor: pointer;
+            padding: 1px 6px;
+        }
+
+        #make-category-container {
+            display: flex;
+            width: 70%;
+            padding: 10px;
+            justify-content: space-between;
+            flex-direction: column;
+            border: 1px solid rgba(0, 0, 0, 0.7);
+            display: none;
+        }
+
+        input[name='new-category'] {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: inline-block;
+            border: 1px solid rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            padding: 1px 2px;
+        }
+
+        #make-category-container>div {
+            display: flex;
+            width: 100%;
+            justify-content: space-evenly;
+        }
+
+        #make-category-container>div>button {
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid black;
+            font-size: 15px;
+            font-weight: 500;
+            color: #FF8066;
+            cursor: pointer;
+            padding: 1px 6px;
+        }
+
+        #make-category-container>div #cancel-make-category {
+            color: white;
+            background-color: rgba(255, 128, 102, 0.9);
+        }
+
+
+        #limit-container {
+            display: flex;
+            width: 70%;
+            justify-content: space-between;
+        }
+
+        #limit-container label {
+            color: #FF4500;
+            font-weight: 600;
+        }
+
+        #make-topic {
+            width: 80px;
+            height: 30px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid black;
+            font-size: 18px;
+            font-weight: 600;
+            color: #FF8066;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class='mask'>
+        <div id="release-container">
+            <div id='close-button'>×</div>
+            <input type="text" name="title" placeholder="文章标题，不超过20字" maxlength="20">
+            <div id="category-container">
+                <span>文章分类：</span>
+                <select name="category" id="category">
+                    <option value="default">default</option>
+                    <option value="">新建分类新建分类新建分类</option>
+                </select>
+                <button id='onoff-make-category'>新建分类</button>
+            </div>
+            <div id='make-category-container' hidden>
+                <input type="text" name="new-category" placeholder="新建文章分类，不超过10字" maxlength="10">
+                <div>
+                    <button id='make-category'>新建</button>
+                    <button id='cancel-make-category'>取消</button>
+                </div>
+            </div>
+            <div id='limit-container'>
+                <span>文章权限：</span>
+                <div>
+                    <input type="radio" name='limit' id='public'>
+                    <label for="public">公共</label>
+                </div>
+                <div>
+                    <input type="radio" name='limit' id='private'>
+                    <label for="private">私有</label>
+                </div>
+            </div>
+            <button id='make-topic'>发表</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('selectstart', function (event) {
+            //禁止选择INPUT以外的元素
+            if (event.target.tagName != 'INPUT') event.preventDefault();
+        })
+        const mask = document.querySelector('.mask');
+        const closeButton = document.querySelector('#close-button');
+        const onoffMakeCategory = document.querySelector('#onoff-make-category');
+        const makeCategoryContainer = document.querySelector('#make-category-container');
+        const makeCategory = document.querySelector('#make-category');
+        const cancelMakeCategory = document.querySelector('#cancel-make-category');
+
+
+        document.addEventListener('click', function (event) {
+            const elem = event.target;
+            //展示蒙层
+            if (elem == closeButton) mask.style.display = 'none';
+            //展示新建分类
+            if (elem == onoffMakeCategory) makeCategoryContainer.style.display = 'flex';
+            //取消新建分类
+            if (elem == cancelMakeCategory) makeCategoryContainer.style.display = 'none';
+        })
+
+
+    </script>
+</body>
+
+</html>
