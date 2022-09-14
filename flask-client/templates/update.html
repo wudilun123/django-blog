@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>发表博客</title>
+    <title>修改博客</title>
     <script type="module" src="/static/js/header.js"></script>
     <script src="/static/js/wangEditor.js"></script>
-    <script type="module" src="/static/js/release.js"></script>
+    <script type="module" src="/static/js/update.js"></script>
     <link rel="stylesheet" href='/static/css/header.css'>
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     <link rel="stylesheet" href='/static/css/wangEditor.css'>
-    <link rel="stylesheet" href='/static/css/release.css'>
+    <link rel="stylesheet" href='/static/css/update.css'>
     <link rel="stylesheet" href="/static/css/footer.css">
 </head>
 
@@ -60,9 +60,10 @@
             </div>
         </div>
     </article>
-    <button id="release-button">发表本文</button>
+    <button id="update-button">保存修改</button>
+    <button id="delete-button">删除博客</button>
     <div class='mask'>
-        <div id="release-container">
+        <div id="update-container">
             <div id='close-button'>×</div>
             <input type="text" name="title" placeholder="文章标题，不超过20字" maxlength="20">
             <div id="category-container">
@@ -90,7 +91,7 @@
                     <label for="private">私有</label>
                 </div>
             </div>
-            <button id='make-topic'>发表</button>
+            <button id='update-topic'>更新</button>
         </div>
     </div>
     <footer>

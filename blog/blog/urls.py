@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('v1/users/',include('user.urls')),
     path('v1/topics/',include('topic.urls')),
+    path('v1/comments/',include('comment.urls')),
 ]
 
 urlpatterns +=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

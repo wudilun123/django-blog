@@ -70,6 +70,7 @@ export class MyAlert {
         cursor: default;
         text-align: center;
         word-wrap: break-word;
+        white-space:pre-wrap;
         `;
         this.confirmButtonContainer.style.cssText = `
         width: 100%;

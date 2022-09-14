@@ -6,6 +6,8 @@ const baseUrl = 'http://127.0.0.1:8000';
 const currentUrl = new URL(window.location.href);//当前页面的URL对象
 const nextUrl = currentUrl.searchParams.get('next');//如果存在则登录后跳转至此url
 const smsButton = document.getElementById('sms_button');
+const signinButton = document.getElementById('signin_button');
+const signupButton = document.getElementById('signup_button');
 const classTop = document.querySelector('.top');
 const ball = document.querySelector('#ball');
 const signStatusSet = document.querySelectorAll('.signstatus');
@@ -48,12 +50,14 @@ document.addEventListener('click', function (event) {
         //清除对应input元素的内容
         elem.previousElementSibling.value = '';
     }
-    if (elem.id == 'signin_button') {
+    if (elem == signinButton) {
         //处理登录事件
+        signinButton.disabled = true;
         postSigninForm();
     }
-    if (elem.id == 'signup_button') {
+    if (elem == signupButton) {
         //处理注册事件
+        signupButton.disabled = true;
         postSignupForm();
     }
 })
@@ -101,7 +105,11 @@ document.addEventListener('selectstart', function (event) {
 
 if (!localStorage.getItem('count')) localStorage.setItem('count', 60);
 if (localStorage.getItem('count') != 60) smsCountDown();
-smsButton.onclick = function () {
+smsButton.onclick = () => {
+    smsButton.disabled = true;
+    getSmsNum();
+}
+function getSmsNum() {
     (async () => {
         //获取验证码
         const phone = document.querySelector(".signup input[name=phone]");
@@ -128,7 +136,7 @@ smsButton.onclick = function () {
                 myAlert.showAlert(jsonResponse.error);
                 break;
         }
-    })().catch(handleError);
+    })().catch(handleError).then(smsButton.disabled = false);
 }
 
 function smsCountDown() {
@@ -167,7 +175,7 @@ function postSigninForm() {
         if (response.status != 200) throw new HttpError("Http error", response.status);
         const jsonResponse = await response.json();
         handleSigninResponse(jsonResponse, signinInfo);
-    })().catch(handleError);
+    })().catch(handleError).then(() => signinButton.disabled = false);
 }
 
 function postSignupForm() {
@@ -190,7 +198,7 @@ function postSignupForm() {
         if (response.status != 200) throw new HttpError("Http error", response.status);
         const jsonResponse = await response.json();
         handleSignupResponse(jsonResponse, signupInfo);
-    })().catch(handleError);
+    })().catch(handleError).then(() => signupButton.disabled = false);
 
 }
 

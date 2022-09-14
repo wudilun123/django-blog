@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/css/category.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <script type="module" src="/static/js/header.js"></script>
+    <script type="module" src="/static/js/category.js"></script>
+    <title>分类管理</title>
+</head>
+
+<body>
+    <nav>
+        <div id="logo">LOGO</div>
+        <input type="checkbox" id="menu-button">
+        <label class="menu-button" for="menu-button">
+            <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+        </label>
+        <ul id="nav-menu">
+            <li id="nav-index">首页</li>
+            <li id="nav-release">发表博客</li>
+            <li id="nav-list">我的博客</li>
+            <li id="nav-home">我的主页</li>
+            <li id="nav-intro">关于网站</li>
+        </ul>
+        <div id="nav-user-link"><a href="/login-reg/">登录/注册</a></div>
+        <div id="nav-user-container">
+            <img id="nav-user-avatar">
+            <span></span>
+            <ul hidden>
+                <li id="nav-user-about">我的资料</li>
+                <li id="nav-user-secret">修改密保</li>
+                <li id="nav-user-category">分类管理</li>
+                <li id="nav-user-logout">退出登录</li>
+            </ul>
+        </div>
+    </nav>
+    <article>
+        <div id="bg-style"></div>
+        <div id="card-container">
+            <div id="container">
+                <div id="category-container">
+                    <button id='onoff-make-category'>新建分类</button>
+                    <div id='make-category-container' hidden>
+                        <input type="text" id='new-category' name="new-category" placeholder="新建文章分类，不超过15字"
+                            maxlength="15">
+                        <div>
+                            <button id='make-category'>新建</button>
+                            <button id='cancel-make-category'>取消</button>
+                        </div>
+                    </div>
+
+                    <span>文章分类:</span>
+                    <ul id="category-list">
+                        <!-- <li>
+                            <a href="">defaqweqwewqu1lt</a>
+                            <input type="text" id='update-category' name="update-category" maxlength="15">
+                            <button class='update-category-button'>修改</button>
+                            <button class='cancel-update-category-button'>取消</button>
+                            <button class="edit-category-button">编辑</button>
+                            <button class="delete-category-button">删除</button>
+                        </li> -->
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+    </article>
+    <footer>
+    </footer>
+</body>
+
+</html>

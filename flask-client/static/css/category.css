@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+article{
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    top: 10vh;
+    caret-color: rgba(0, 0, 0, 0);
+}
+article #bg-style{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ffffff 25%, transparent 25%), linear-gradient(315deg, #ffffff 25%, transparent 25%) ,linear-gradient(45deg, transparent 24%,#ff7373 25%, #ff7373 30%, transparent 31%, transparent 39%,#ff7373 40%, #ff7373 45%, transparent 45%),linear-gradient(315deg, transparent 24%,#ff7373 25%, #ff7373 30%, transparent 31%, transparent 39%,#ff7373 40%, #ff7373 45%, transparent 45%);
+    background-size: 6em 6em;
+    background-color: #ffffff;
+    opacity: 1;
+}
+article #card-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 90%;
+    height: 90%;
+    background: linear-gradient(90deg,transparent 50%,#829dfa 50%);
+    background-size: 4em 4em;
+    background-color: #ffffff;
+    opacity: 1;
+    box-shadow: 0 10px 30px 10px rgba(0, 0, 0, 0.4);
+    cursor: default;
+}
+article #card-container #container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 100%;
+    transform: translate(-50%,-50%);
+    background-color: #ffffff;
+    overflow: auto;
+}
+
+#category-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    min-width: 100%;
+    min-height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#onoff-make-category {
+    background-color: white;
+    height: 35px;
+    width: 90px;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255,0,0,0.7);
+    cursor: pointer;
+    padding: 1px 6px;
+    margin: 20px 0;
+}
+
+#make-category-container {
+    display: flex;
+    width: 300px;
+    padding: 10px;
+    justify-content: space-between;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    gap: 10px;
+    display: none;
+    margin-bottom: 20px;
+}
+
+input{
+    font-size: 18px;
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    padding: 1px 2px;
+    caret-color: rgba(0, 0, 0,0.7);
+}
+
+#make-category-container>div {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+#make-category-container>div>button {
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,0,0,0.7);
+    cursor: pointer;
+    padding: 1px 6px;
+}
+
+#make-category-container>div #cancel-make-category {
+    color: white;
+    background-color: rgba(255,0,0,0.7);
+}
+
+
+#category-container>span{
+    font-size: 24px;
+    height: 35px;
+}
+
+#category-container #category-list{
+    margin: 20px 0;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    list-style: none;
+   
+}
+#category-list>li{
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+#category-list a{
+    font-size: 18px;
+}
+
+#category-list button{
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,0,0,0.7);
+    cursor: pointer;
+    padding: 1px 6px;
+}
+#category-list .delete-category-button,#category-list .cancel-update-category-button{
+    color: white;
+    background-color: rgba(255,0,0,0.7);
+}
+
+

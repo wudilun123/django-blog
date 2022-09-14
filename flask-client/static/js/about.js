@@ -16,7 +16,7 @@ const submitChangeButton = document.querySelector('#submit-change-button');
 const navUserLink = document.querySelector('#nav-user-link a');
 const aboutNickname = document.querySelector('#about-nickname');
 const aboutSign = document.querySelector('#about-sign');
-const aboutYear = document.querySelector('#about-year');
+const aboutCreatedTime = document.querySelector('#about-created-time');
 const aboutInfo = document.querySelector('#about-info');
 
 class HttpError extends Error {
@@ -112,8 +112,10 @@ document.addEventListener('click', function (event) {
 
 changeButton.onclick = changeOn;
 cancleChangeButton.onclick = clearChange;
-submitChangeButton.onclick = submitChange;
-
+submitChangeButton.onclick = () => {
+    submitChangeButton.disabled = true;
+    submitChange();
+}
 loadPage();//异步加载页面 
 
 function loadPage() {
@@ -121,12 +123,15 @@ function loadPage() {
     logo.textContent = `用户${aboutUsername}的个人资料`;
     document.title = `${aboutUsername}的个人资料`;
     (async () => {
+        //加载当前页面所属用户的数据
         const response = await fetch(baseUrl + `/v1/users/info/${aboutUsername}/`);
         if (response.status != 200) throw new HttpError("Http error", response.status);
         const jsonResponse = await response.json();
         if (jsonResponse.code == 200) {
             aboutNickname.children[1].textContent = jsonResponse.data.nickname;
             aboutSign.children[1].textContent = jsonResponse.data.sign;
+            const createdTime = new Date(jsonResponse.data.created_time * 1000);
+            aboutCreatedTime.children[1].textContent = `${createdTime.getFullYear()}/${createdTime.getMonth() + 1}/${createdTime.getDate()}`;
             aboutInfo.children[1].textContent = jsonResponse.data.info;
             if (jsonResponse.data.avatar) avatarImg.src = baseUrl + '/media/' + jsonResponse.data.avatar;
             else avatarImg.src = defaultAvatarUrl;//用户设置了头像就加载对应URL，反之加载默认头像
@@ -135,11 +140,6 @@ function loadPage() {
             //用户不存在
             //待添加跳转
             myAlert.showAlert(jsonResponse.error);
-        }
-        if (username) {
-            //用户已登录
-            navUserLink.href = `/${username}/info/`;
-            navUserLink.textContent = `当前登录用户：${username}`;
         }
         if (aboutUsername == username) {
             //只有当前页面对应的用户可以修改资料
@@ -221,7 +221,7 @@ function submitChange() {
         if (response.status != 200) throw new HttpError("Http error", response.status);
         const jsonResponse = await response.json();
         handlePostResponse(jsonResponse);
-    })().catch(handleError);
+    })().catch(handleError).then(() => submitChangeButton.disabled = false);
 }
 
 function checkSubmitInfo() {

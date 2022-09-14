@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章列表</title>
+    <script type="module" src="/static/js/header.js"></script>
+    <script type="module" src="/static/js/list.js"></script>
+    <link rel="stylesheet" href='/static/css/header.css'>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href='/static/css/list.css'>
+    <link rel="stylesheet" href="/static/css/author-card.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
+</head>
+
+<body>
+    <nav>
+        <div id="logo">LOGO</div>
+        <input type="checkbox" id="menu-button">
+        <label class="menu-button" for="menu-button">
+            <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+        </label>
+        <ul id="nav-menu">
+            <li id="nav-index">首页</li>
+            <li id="nav-release">发表博客</li>
+            <li id="nav-list">我的博客</li>
+            <li id="nav-home">我的主页</li>
+            <li id="nav-intro">关于网站</li>
+        </ul>
+        <div id="nav-user-link"><a href="/login-reg/">登录/注册</a></div>
+        <div id="nav-user-container">
+            <img id="nav-user-avatar">
+            <span></span>
+            <ul hidden>
+                <li id="nav-user-about">我的资料</li>
+                <li id="nav-user-secret">修改密保</li>
+                <li id="nav-user-category">分类管理</li>
+                <li id="nav-user-logout">退出登录</li>
+            </ul>
+        </div>
+    </nav>
+    <article>
+        <div id="background"></div>
+        <div id="left-wrapper">
+
+        </div>
+        <div id="middle—wrapper">
+            <div id="filter-container">
+                <div id="limit-container">
+                    <span>权限:</span>
+                    <select name="limit" id="limit">
+                        <option value="all">所有</option>
+                        <option value="public">公开</option>
+                        <option value="private">私有</option>
+                    </select>
+                </div>
+                <div id="category-container">
+                    <span>分类:</span>
+                    <select name="category" id="category">
+                        <option value="all">所有</option>
+                    </select>
+                </div>
+                <div id="order-container">
+                    <span>排序方式:</span>
+                    <select name="order" id="order">
+                        <option value="default">默认排序</option>
+                        <option value="created">创建时间升序</option>
+                        <option value="created_desc">创建时间降序</option>
+                        <option value="updated">更新时间升序</option>
+                        <option value="updated_desc">更新时间降序</option>
+                    </select>
+                </div>
+                <button id="filter-button">查询</button>
+            </div>
+            <div id="topic-count">未查询到文章数据</div>
+            <!-- <div class="topic-container">
+                <h1>
+                    <a href="1">《标题二十个字标题二十个字标题二十个字二十》</a>
+                </h1>
+                <div class="topic-info">
+                    <span class="topic-author-info"><i class="fa fa-user-o"
+                            aria-hidden="true"></i>&nbsp作者:大傻瓜瓜瓜十九白起喔喔</span>
+                    <span class="topic-limit-info"><i class="fa fa-unlock-alt" aria-hidden="true">&nbsp权限:公开</i></span>
+                    <span class="topic-category-info"><i class="fa fa-tag"
+                            aria-hidden="true"></i>&nbsp分类:十五个字十五个字十五个字十五个</span>
+                    <span class="topic-time-info"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp发表于:2022/09/06
+                        23:31</span>
+                    <span class="topic-time-info"><i class="fa fa-clock-o" aria-hidden="true"></i>修改于:2022/09/06
+                        23:31</span>
+                </div>
+                <div class="topic-introduce">
+                    简介九十个字简介九十个字简介九十个字简介九十个字简介九十个字
+                    简介九十个字简介九十个字简介九十个字简介九十个字简介九十个字
+                    简介九十个字简介九十个字简介九十个字简介九十个字简介九十个字
+                </div>
+            </div> -->
+            <div id="page-container">
+                <span id="last-page">上一页</span>
+                <span id="page-info">第 1 页 / 共 1 页</span>
+                <span id="next-page">下一页</span>
+                <input type="number" placeholder="跳转页数" step=1 onkeyup="this.value=this.value.replace(/[\D]/g,'')"
+                    onpaste="this.value=this.value.replace(/[\D]/g,'')">
+                <button id="jump-button">跳转</button>
+            </div>
+        </div>
+        <div id="right-wrapper">
+            <div id="author-container">
+                <img id="author-avatar">
+                <span id="author-nickname"></span>
+                <div id="author-sign">个性签名: </div>
+                <button id="author-about">Ta的资料</button>
+                <button id="author-list">Ta的博客</button>
+            </div>
+        </div>
+    </article>
+    <footer>
+
+    </footer>
+</body>
+
+</html>

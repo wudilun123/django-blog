@@ -7,7 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/static/css/about.css">
   <link rel="stylesheet" href="/static/css/header.css">
+  <link rel="stylesheet" href="/static/css/footer.css">
   <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+  <script type="module" src="/static/js/header.js"></script>
   <script type="module" src="/static/js/about.js"></script>
   <title>个人详情</title>
 </head>
@@ -20,13 +22,23 @@
       <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
     </label>
     <ul id="nav-menu">
-      <li>Home</li>
-      <li>Services</li>
-      <li>Products</li>
-      <li>Clients</li>
-      <li>Contact</li>
+      <li id="nav-index">首页</li>
+      <li id="nav-release">发表博客</li>
+      <li id="nav-list">我的博客</li>
+      <li id="nav-home">我的主页</li>
+      <li id="nav-intro">关于网站</li>
     </ul>
     <div id="nav-user-link"><a href="/login-reg/">登录/注册</a></div>
+    <div id="nav-user-container">
+      <img id="nav-user-avatar">
+      <span></span>
+      <ul hidden>
+        <li id="nav-user-about">我的资料</li>
+        <li id="nav-user-secret">修改密保</li>
+        <li id="nav-user-category">分类管理</li>
+        <li id="nav-user-logout">退出登录</li>
+      </ul>
+    </div>
   </nav>
   <article>
     <div id="bg-style"></div>
@@ -46,7 +58,7 @@
           <span class="first-span">个性签名:</span> <span class="second-span"></span>
           <textarea name="sign" hidden maxlength="50" placeholder="长度限制为50个字符"></textarea>
         </div>
-        <div id="about-year" class="user-data">
+        <div id="about-created-time" class="user-data">
           <span class="first-span">注册时间:</span><span class="second-span"></span>
         </div>
         <div id="about-info" class="user-data">
@@ -61,7 +73,9 @@
       </div>
     </div>
   </article>
+  <footer>
 
+  </footer>
 </body>
 
 </html>

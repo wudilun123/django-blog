@@ -1,0 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+footer{
+    position: fixed;
+    width: 100vw;
+    height: 5vh;
+    bottom: 0;
+    border: 1px solid rgb(0, 0, 0);
+    z-index: 2;
+    background-color: black;
+}
