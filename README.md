@@ -1,2 +1,8 @@
 # django-blog
 django实现的简易博客
+
+采用前后端分离的模式，前端基于原生js搭建，后端使用django开发，使用celery来完成异步任务和定时任务，使用redis进行文章详情页/列表页等页面的缓存以及作为celery的broker和backend，使用mysql进行数据持久化，使用jwt进行登录认证
+
+blog是django后端文件目录，flask-client是测试使用的前端服务
+
+实际部署采用nginx+uWSGI的方式
