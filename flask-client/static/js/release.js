@@ -2,10 +2,9 @@
 
 import { MyAlert } from './myAlert.js'
 import { MyConfirm } from './myConfirm.js'
+import { blankStrRegexp, baseUrl, HttpError } from './settings.js'
 
 
-const blankStrRegexp = /^\s*$/;//纯空白字符串的正则,JS把' '这样的字符串也视为true
-const baseUrl = 'http://127.0.0.1:8000';
 const username = localStorage.getItem('username');//当前登录用户
 const token = localStorage.getItem('blogToken');
 const blogContent = localStorage.getItem('blogContent');//将未提交的文章内容保存在本地存储中
@@ -16,13 +15,6 @@ const visitedUsername = window.location.href.match(/\/([^\/]+)\/topic\/release/)
 const E = window.wangEditor;
 let timerId;//执行周期保存任务对应的标识符
 
-class HttpError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.name = "HttpError";
-        this.status = status;
-    }
-}
 
 new Promise(function (resolve, reject) {
     //检测登录状态
@@ -72,12 +64,11 @@ const editorConfig = {
     },
     MENU_CONF: {},
     maxLength: 10000,
-    // readOnly: true,
 }
 const editor = E.createEditor({
     selector: '#editor-text-area',
     config: editorConfig,
-    mode: 'default', // or 'simple'
+    mode: 'default',
 })
 
 const toolbarConfig = {};
@@ -146,7 +137,7 @@ document.addEventListener('click', function (event) {
 
 function getCategory() {
     (async () => {
-        const response = await fetch(baseUrl + `/v1/topics/category/${username}/`, {
+        const response = await fetch(baseUrl + `/api/v1/topics/category/${username}/`, {
             headers: {
                 authorization: token
             },
@@ -193,7 +184,7 @@ function createCategory() {
             }
         }
         const data = { 'category': newCategory.value };
-        const response = await fetch(baseUrl + `/v1/topics/category/${username}/`, {
+        const response = await fetch(baseUrl + `/api/v1/topics/category/${username}/`, {
             method: 'POST',
             headers: {
                 authorization: token,
@@ -237,7 +228,7 @@ function createTopic() {
         data.introduce = editor.getText().slice(0, 90);//截取前九十个字作为简介
         data.content = editor.getHtml();
         if (!checkTopicData(data)) return;
-        const response = await fetch(baseUrl + `/v1/topics/${username}/`, {
+        const response = await fetch(baseUrl + `/api/v1/topics/${username}/`, {
             method: 'POST',
             headers: {
                 authorization: token,

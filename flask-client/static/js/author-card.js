@@ -1,14 +1,13 @@
+import { defaultAvatarUrl, baseUrl } from './settings.js'
 export function loadAuthorCard(username) {
     //根据传入的username加载对应作者的卡片
-    const defaultAvatarUrl = "/static/image/测试头像.png";//默认头像
     const authorAvatar = document.querySelector('#author-avatar');
     const authorNickname = document.querySelector('#author-nickname');
     const authorSign = document.querySelector('#author-sign');
     const authorAbout = document.querySelector('#author-about');
     const authorList = document.querySelector('#author-list');
     (async () => {
-        const baseUrl = 'http://127.0.0.1:8000';
-        const response = await fetch(baseUrl + `/v1/users/info/${username}/`);
+        const response = await fetch(baseUrl + `/api/v1/users/info/${username}/`);
         if (response.status != 200) throw new Error();
         const jsonResponse = await response.json();
         if (jsonResponse.code == 200) {

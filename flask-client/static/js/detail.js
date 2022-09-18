@@ -2,28 +2,20 @@
 
 import { MyAlert } from './myAlert.js'
 import { loadAuthorCard } from './author-card.js'
+import { blankStrRegexp, baseUrl, HttpError } from './settings.js'
 
-const blankStrRegexp = /^\s*$/;
-const baseUrl = 'http://127.0.0.1:8000';
 const username = localStorage.getItem('username');//当前登录用户
 const token = localStorage.getItem('blogToken');
 const myAlert = new MyAlert();
 const visitedUsername = window.location.href.match(/\/([^\/]+)\/topics\/detail/)[1];//当前页面所属用户
 const topicId = window.location.href.match(/\/*\/topics\/detail\/([^\/]+)/)[1];//页面对应文章id
 const E = window.wangEditor;
-const commentUrl = new URL(baseUrl + `/v1/comments/${topicId}/`);
-const topicUrl = new URL(baseUrl + `/v1/topics/${visitedUsername}/`);
+const commentUrl = new URL(baseUrl + `/api/v1/comments/${topicId}/`);
+const topicUrl = new URL(baseUrl + `/api/v1/topics/${visitedUsername}/`);
 const defaultAvatarUrl = "/static/image/测试头像.png";//默认头像
 
 topicUrl.searchParams.set('topic_id', topicId);
 
-class HttpError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.name = "HttpError";
-        this.status = status;
-    }
-}
 
 // 标题 DOM 容器
 const headerContainer = document.getElementById('header-container');
@@ -83,7 +75,6 @@ document.addEventListener('selectstart', function (event) {
 });
 
 loadPage();
-
 function loadPage() {
     (async () => {
         const response = await fetch(topicUrl, {
@@ -97,7 +88,9 @@ function loadPage() {
             case 200:
                 loadTopic(jsonResponse);
                 loadAuthorCard(visitedUsername);
-                loadCommentArea();
+                loadCommentSend();
+                loadCommentData();
+                loadReplySend();
                 break;
             default:
                 myAlert.showAlert(jsonResponse.error);
@@ -186,10 +179,7 @@ function loadTopic(jsonResponse) {
     editor.setHtml(myXss.process(content));
 }
 
-function loadCommentArea() {
-
-    const commentList = document.querySelector('#comment-list');
-    const commentTextarea = document.querySelector('#comment-textarea');
+function loadCommentSend() {
     const commentSend = document.querySelector('#comment-send');
     const commentBanned = document.querySelector('#comment-banned');
 
@@ -206,18 +196,6 @@ function loadCommentArea() {
     ]
     let commentEditor;
     let commentToolbar;
-
-    //回复的富文本编辑器配置
-    const replyEditorConfig = {
-        maxLength: 100,
-        placeholder: '在此输入，不超过100个字符(过多换行符可能导致超出长度限制)',
-    }
-    const replyToolbarConfig = {};
-    replyToolbarConfig.toolbarKeys = [
-        'emotion',
-    ]
-    let replyEditor;
-    let replyToolbar;
 
     if (!token) {
         //未登录则不显示评论区富文本编辑器
@@ -244,15 +222,30 @@ function loadCommentArea() {
         const commentSendButton = document.querySelector('#comment-send-button');
         commentSendButton.onclick = () => {
             commentSendButton.disabled = true;
-            sendComment().catch(function (error) {
+            const content = commentEditor.getText();
+            sendComment(content).catch(function (error) {
                 console.log(error);
                 myAlert.showAlert('评论发表失败！');
             }).then(() => commentSendButton.disabled = false);
         }
     }
+}
 
-    loadCommentData();
+function loadReplySend() {
 
+    //回复的富文本编辑器配置
+    const replyEditorConfig = {
+        maxLength: 100,
+        placeholder: '在此输入，不超过100个字符(过多换行符可能导致超出长度限制)',
+    }
+    const replyToolbarConfig = {};
+    replyToolbarConfig.toolbarKeys = [
+        'emotion',
+    ]
+    let replyEditor;
+    let replyToolbar;
+
+    const commentList = document.querySelector('#comment-list');
     commentList.addEventListener('click', function (event) {
         const elem = event.target;
         if (elem.matches('.onoff-reply-send')) {
@@ -299,59 +292,54 @@ function loadCommentArea() {
                     mode: 'simple',
                 })
             }
-
         } else if (elem.matches('#reply-send-button')) {
             elem.disabled = true;
             //在回复所属的评论项中拿到parrentId
             const parrentId = elem.closest('.comment-item').dataset.commentId;
-            sendComment(parrentId).catch(function (error) {
+            const content = replyEditor.getText();
+            sendComment(content, parrentId).catch(function (error) {
                 console.log(error);
                 myAlert.showAlert('评论发表失败！');
             }).then(() => elem.disabled = false);
         }
     })
+}
 
-    async function sendComment(parrentId = null) {
-        //带有参数parrentId为回复，否则为评论
-        const data = {};
-        if (parrentId) {
-            data.parrentId = parrentId;
-            data.content = replyEditor.getText();
-        } else {
-            data.content = commentEditor.getText();
-        }
-        if (blankStrRegexp.test(data.content)) {
-            //检查空白评论
-            myAlert.showAlert('评论内容不能为空！');
-            return;
-        }
-        const response = await fetch(commentUrl, {
-            method: 'POST',
-            headers: {
-                authorization: token,
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(data),
-        });
-        if (response.status != 200) throw new HttpError("Http error", response.status);
-        const jsonResponse = await response.json();
-        switch (jsonResponse.code) {
-            case 200:
-                //及时加载评论
-                myAlert.showAlert('评论发表成功！', () => window.location.href = window.location.href);
-                break;
-            case 403:
-                myAlert.showAlert('请登录！', () => {
-                    localStorage.removeItem('blogToken');
-                    localStorage.removeItem('username');
-                    window.location.href = `/login-reg/?next=${window.location.href}`
-                });
-                break;
-            default:
-                myAlert.showAlert(jsonResponse.error);
-        }
+async function sendComment(content, parrentId = null) {
+    //带有参数parrentId为回复，否则为评论
+    const data = {};
+    data.content = content;
+    if (parrentId) data.parrentId = parrentId;
+    if (blankStrRegexp.test(data.content)) {
+        //检查空白评论
+        myAlert.showAlert('评论内容不能为空！');
+        return;
     }
-
+    const response = await fetch(commentUrl, {
+        method: 'POST',
+        headers: {
+            authorization: token,
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(data),
+    });
+    if (response.status != 200) throw new HttpError("Http error", response.status);
+    const jsonResponse = await response.json();
+    switch (jsonResponse.code) {
+        case 200:
+            //及时加载评论
+            myAlert.showAlert('评论发表成功！', () => window.location.href = window.location.href);
+            break;
+        case 403:
+            myAlert.showAlert('请登录！', () => {
+                localStorage.removeItem('blogToken');
+                localStorage.removeItem('username');
+                window.location.href = `/login-reg/?next=${window.location.href}`
+            });
+            break;
+        default:
+            myAlert.showAlert(jsonResponse.error);
+    }
 }
 
 function loadCommentData() {

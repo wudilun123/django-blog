@@ -3,13 +3,13 @@
 
 import { MyAlert } from './myAlert.js'
 import { MyConfirm } from './myConfirm.js'
+import { defaultAvatarUrl, baseUrl, HttpError } from './settings.js'
 
 let username = localStorage.getItem('username');//当前登录用户
 let token = localStorage.getItem('blogToken');
 const myAlert = new MyAlert();
 const myConfirm = new MyConfirm();
-const baseUrl = 'http://127.0.0.1:8000';
-const defaultAvatarUrl = "/static/image/测试头像.png";//默认头像
+
 
 const navIndex = document.querySelector('#nav-index');
 const navRelease = document.querySelector('#nav-release');
@@ -28,16 +28,10 @@ const navUserSecret = document.querySelector('#nav-user-secret');
 const navUserCategory = document.querySelector('#nav-user-category');
 const navUserLogout = document.querySelector('#nav-user-logout');
 
-class HttpError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.name = "HttpError";
-        this.status = status;
-    }
-}
+
 
 (async () => {
-    const response = await fetch(baseUrl + `/v1/users/avatar/`, {
+    const response = await fetch(baseUrl + `/api/v1/users/avatar/`, {
         headers: {
             authorization: token
         },
@@ -62,7 +56,7 @@ class HttpError extends Error {
     navUserLink.querySelector('a').href = `/login-reg/?next=${window.location.href}`;
 }).then(function () {
 
-    navIndex.onclick = () => window.location.href = '//';//有待添加
+    navIndex.onclick = () => window.location.href = '/index/';
     navIntro.onclick = () => window.location.href = '//';//有待添加
     if (username) {
         navUserAvatar.onclick = function () {

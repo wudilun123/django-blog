@@ -20,10 +20,10 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('v1/users/',include('user.urls')),
-    path('v1/topics/',include('topic.urls')),
-    path('v1/comments/',include('comment.urls')),
+    path('api/admin/', admin.site.urls),
+    path('api/v1/users/',include('user.urls')),
+    path('api/v1/topics/',include('topic.urls')),
+    path('api/v1/comments/',include('comment.urls')),
 ]
 
 urlpatterns +=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from tools.cache_decorator import cache_set
-from .models import Category, Topic
+from .models import Category, Topic, TopicViewNum, TopicThumbsUpNum
 from user.models import UserProfile
 from tools.topic_counter import view_counter
 from tools.logging_decorator import logging_check, get_logging_user
@@ -20,6 +20,24 @@ blank_str_regexp = re.compile("\s*$")  # 空白字符串匹配，包括''和' '
 
 
 # Create your views here.
+
+def get_hot5_view(request):
+    # 返回浏览量前五的相应数据
+    if request.method != 'GET':
+        return HttpResponse(content='', content_type='text/html', status=405)
+    data = cache.get('view_top5_list')
+    result = {'code': 200, 'data': data}
+    return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
+
+
+def get_last5_view(request):
+    # 返回最新五篇文章的相应数据
+    if request.method != 'GET':
+        return HttpResponse(content='', content_type='text/html', status=405)
+    data = cache.get('last5_list')
+    result = {'code': 200, 'data': data}
+    return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
+
 
 class CategoryView(View):
     # 增删改查分类信息
@@ -133,7 +151,7 @@ class CategoryView(View):
             return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
         try:
             with transaction.atomic():
-                #删除分类的同时把其下文章归为默认分类下
+                # 删除分类的同时把其下文章归为默认分类下
                 default_category = Category.objects.get(user=user, category='default')
                 category.topic_set.all().update(category=default_category)
                 category.delete()
@@ -243,18 +261,22 @@ class TopicView(View):
         if len(content) > settings.MAX_TOPIC_CONTENT_LENGTH:
             return {'code': 10707, 'error': '文章长度超出最大限制！'}
         try:
-            topic = Topic.objects.create(title=title, category=category, limit=limit, introduce=introduce,
-                                         content=content,
-                                         user=user)
+            with transaction.atomic():
+                topic = Topic.objects.create(title=title, category=category, limit=limit, introduce=introduce,
+                                             content=content,
+                                             user=user)
+                TopicViewNum.objects.create(topic=topic, count=0)
+                TopicThumbsUpNum.objects.create(topic=topic, count=0)
         except(Exception) as e:
             return {'code': 10708, 'error': '文章发表失败！'}
         # 清理缓存
         self.clear_topic_caches(request)
         # 使用redis存储浏览量和点赞数
-        view_num_key = 'topic_%s_%s_view_num' % (user.username, topic.id)
-        thumbs_up_num_key = 'topic_%s_%s_thumbs_up_num' % (user.username, topic.id)
-        cache.set(view_num_key, 0, None)
-        cache.set(thumbs_up_num_key, 0, None)
+        view_counter(topic.id)
+        # view_num_key = 'topic_%s_view_num' % (user.username, topic.id)
+        # thumbs_up_num_key = 'topic_%s_thumbs_up_num' % (user.username, topic.id)
+        # cache.set(view_num_key, 0, None)
+        # cache.set(thumbs_up_num_key, 0, None)
         return {'code': 200, 'data': {'id': topic.id}}
 
     def handle_update_data(self, request, visited_username):
@@ -408,7 +430,7 @@ class TopicView(View):
             if not topic.limit:
                 # 文章权限为私有
                 return {'code': 10902, 'error': '无权限访问！'}
-        view_num = view_counter(visited_username, topic_id)
+        view_num = view_counter(topic_id)
         try:
             data = {}
             data['is_same_user'] = True if (user == visited_user) else False

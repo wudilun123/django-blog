@@ -2,10 +2,8 @@
 
 import { MyAlert } from './myAlert.js'
 import { MyConfirm } from './myConfirm.js'
+import { blankStrRegexp, baseUrl, HttpError } from './settings.js'
 
-
-const blankStrRegexp = /^\s*$/;//纯空白字符串的正则,JS把' '这样的字符串也视为true
-const baseUrl = 'http://127.0.0.1:8000';
 const username = localStorage.getItem('username');//当前登录用户
 const token = localStorage.getItem('blogToken');
 const myAlert = new MyAlert();
@@ -13,17 +11,11 @@ const myConfirm = new MyConfirm();
 const visitedUsername = window.location.href.match(/\/([^\/]+)\/topics\/update/)[1];//当前页面所属用户
 const topicId = window.location.href.match(/\/*\/topics\/update\/([^\/]+)/)[1];//页面对应文章id
 const E = window.wangEditor;
-const topicUrl = new URL(baseUrl + `/v1/topics/${visitedUsername}/`);
+const topicUrl = new URL(baseUrl + `/api/v1/topics/${visitedUsername}/`);
 
 topicUrl.searchParams.set('topic_id', topicId);
 
-class HttpError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.name = "HttpError";
-        this.status = status;
-    }
-}
+
 
 // 标题 DOM 容器
 const headerContainer = document.getElementById('header-container');
@@ -47,12 +39,11 @@ const editorConfig = {
     MENU_CONF: {},
     maxLength: 10000,
     autoFocus: false,
-    // readOnly: true,
 }
 const editor = E.createEditor({
     selector: '#editor-text-area',
     config: editorConfig,
-    mode: 'default', // or 'simple'
+    mode: 'default',
 })
 
 const toolbarConfig = {};
@@ -93,8 +84,6 @@ const updateTopic = document.querySelector('#update-topic');
 const title = document.querySelector('input[name=title]');
 const category = document.querySelector('#category');
 const limitContainer = document.querySelector('#limit-container');
-
-
 
 (async () => {
     //先检测登录，之后获取文章数据
@@ -153,8 +142,6 @@ const limitContainer = document.querySelector('#limit-container');
     }
 });
 
-
-
 document.addEventListener('click', function (event) {
     const elem = event.target;
     //取消展示蒙层
@@ -177,7 +164,7 @@ document.addEventListener('click', function (event) {
 
 function setTopicInfo(titleValue, limitValue, categoryValue) {
     (async () => {
-        const response = await fetch(baseUrl + `/v1/topics/category/${username}/`, {
+        const response = await fetch(baseUrl + `/api/v1/topics/category/${username}/`, {
             headers: {
                 authorization: token
             },
@@ -227,7 +214,7 @@ function createCategory() {
             }
         }
         const data = { 'category': newCategory.value };
-        const response = await fetch(baseUrl + `/v1/topics/category/${username}/`, {
+        const response = await fetch(baseUrl + `/api/v1/topics/category/${username}/`, {
             method: 'POST',
             headers: {
                 authorization: token,

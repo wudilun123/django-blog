@@ -1,11 +1,11 @@
 'use strict'
 
 import { MyAlert } from './myAlert.js'
+import { blankStrRegexp, baseUrl, HttpError } from './settings.js'
 
-const blankStrRegexp = /^\s*$/;//纯空白字符串的正则,JS把' '这样的字符串也视为true
 const username = localStorage.getItem('username');//当前登录用户
 const token = localStorage.getItem('blogToken');
-const baseUrl = 'http://127.0.0.1:8000';
+
 const myAlert = new MyAlert();
 const aboutUsername = window.location.href.match(/\/([^\/]+)\/info/)[1];//当前页面所属用户
 const avatarImg = document.querySelector('#avatar img');
@@ -19,13 +19,7 @@ const aboutSign = document.querySelector('#about-sign');
 const aboutCreatedTime = document.querySelector('#about-created-time');
 const aboutInfo = document.querySelector('#about-info');
 
-class HttpError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.name = "HttpError";
-        this.status = status;
-    }
-}
+
 
 document.addEventListener('selectstart', function (event) {
     //禁用textarea外的选择
@@ -116,15 +110,13 @@ submitChangeButton.onclick = () => {
     submitChangeButton.disabled = true;
     submitChange();
 }
-loadPage();//异步加载页面 
 
+loadPage();//异步加载页面 
 function loadPage() {
     //异步加载用户数据
-    logo.textContent = `用户${aboutUsername}的个人资料`;
-    document.title = `${aboutUsername}的个人资料`;
     (async () => {
         //加载当前页面所属用户的数据
-        const response = await fetch(baseUrl + `/v1/users/info/${aboutUsername}/`);
+        const response = await fetch(baseUrl + `/api/v1/users/info/${aboutUsername}/`);
         if (response.status != 200) throw new HttpError("Http error", response.status);
         const jsonResponse = await response.json();
         if (jsonResponse.code == 200) {
@@ -211,7 +203,7 @@ function submitChange() {
         return;
     }
     (async () => {
-        const response = await fetch(baseUrl + `/v1/users/info/${aboutUsername}/`, {
+        const response = await fetch(baseUrl + `/api/v1/users/info/${aboutUsername}/`, {
             method: 'POST',
             body: form,
             headers: {

@@ -30,7 +30,7 @@ def cache_set(expire):
             response = cache.get(cache_key)
             if response:
                 if topic_id is not None:
-                    view_counter(visited_username, topic_id)  # 有一点小问题，如果在缓存中没有权限访问文章也会增加浏览量
+                    view_counter(topic_id)  # 有一点小问题，如果在缓存中没有权限访问文章也会增加浏览量
                 print('cache in')
                 return response
             # 执行视图

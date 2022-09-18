@@ -1,8 +1,9 @@
 'use strict'
 import { MyAlert } from './myAlert.js'
 import { loadAuthorCard } from './author-card.js'
+import { baseUrl, HttpError } from './settings.js'
+import { loadRanking } from './ranking.js'
 
-const baseUrl = 'http://127.0.0.1:8000';
 const username = localStorage.getItem('username');//当前登录用户
 const token = localStorage.getItem('blogToken');
 const myAlert = new MyAlert();
@@ -14,17 +15,9 @@ const pageParam = currentUrl.searchParams.get('page');
 const limitParam = currentUrl.searchParams.get('limit');
 const categoryParam = currentUrl.searchParams.get('category');
 const orderParam = currentUrl.searchParams.get('order');
-const requestUrl = new URL(baseUrl + `/v1/topics/${visitedUsername}/`);
+const requestUrl = new URL(baseUrl + `/api/v1/topics/${visitedUsername}/`);
 
 
-
-class HttpError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.name = "HttpError";
-        this.status = status;
-    }
-}
 
 document.addEventListener('selectstart', function (event) {
     //禁止选择
@@ -32,7 +25,6 @@ document.addEventListener('selectstart', function (event) {
 })
 
 loadPage();
-
 function loadPage() {
     if (pageParam !== null) requestUrl.searchParams.append('page', pageParam);
     requestUrl.searchParams.append('page_topic_num', PAGE_TOPIC_NUM);
@@ -60,6 +52,7 @@ function loadPage() {
                 myAlert.showAlert(jsonResponse.error);
         }
     })().catch(function (error) {
+        console.log(error)
         if (error instanceof TypeError) {
             myAlert.showAlert("您的网络出了一些问题，请求未成功发送！");
         } else if (error instanceof HttpError) {
@@ -81,6 +74,7 @@ function handleJsonResp(jsonResponse) {
     loadFilterArea(isSameUser, category);
     loadListArea(topics);
     loadPageArea(topicNum);
+    loadRanking();
     loadAuthorCard(visitedUsername);
 }
 
@@ -105,9 +99,9 @@ function loadFilterArea(isSameUser, category) {
         option.textContent = c;
         categorySelect.append(option);
     }
-    if (limitParam !== null) limitSelect.querySelector(`option[value=${limitParam}]`).setAttribute('selected', '');
-    if (categoryParam !== null) categorySelect.querySelector(`option[value=${categoryParam}]`).setAttribute('selected', '');
-    if (orderParam !== null) orderSelect.querySelector(`option[value=${orderParam}]`).setAttribute('selected', '');
+    if (limitParam !== null) limitSelect.querySelector(`option[value='${limitParam}']`).setAttribute('selected', '');
+    if (categoryParam !== null) categorySelect.querySelector(`option[value='${categoryParam}']`).setAttribute('selected', '');
+    if (orderParam !== null) orderSelect.querySelector(`option[value='${orderParam}']`).setAttribute('selected', '');
     filterButton.onclick = function () {
         currentUrl.searchParams.set('limit', limitSelect.querySelector('option:checked').value);
         currentUrl.searchParams.set('category', categorySelect.querySelector('option:checked').value);
@@ -152,7 +146,7 @@ function loadListArea(topics) {
         topicTime = topicContainer.querySelector('.topic-time-info');
         topicIntroduce = topicContainer.querySelector('.topic-introduce');
 
-        a.href = `http://127.0.0.1:5000/${visitedUsername}/topics/detail/${t.id}`;
+        a.href = `/${visitedUsername}/topics/detail/${t.id}`;
         a.textContent = t.title;
         a.target = '_blank';
 

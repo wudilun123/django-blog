@@ -2,32 +2,20 @@
 
 import { MyAlert } from './myAlert.js'
 import { MyConfirm } from './myConfirm.js'
+import { blankStrRegexp, baseUrl, HttpError } from './settings.js'
 
-
-const blankStrRegexp = /^\s*$/;//纯空白字符串的正则,JS把' '这样的字符串也视为true
-const baseUrl = 'http://127.0.0.1:8000';
 const username = localStorage.getItem('username');//当前登录用户
 const token = localStorage.getItem('blogToken');
 const myAlert = new MyAlert();
 const myConfirm = new MyConfirm();
 const visitedUsername = window.location.href.match(/\/([^\/]+)\/topics\/category/)[1];//当前页面所属用户
-const categoryUrl = new URL(baseUrl + `/v1/topics/category/${username}/`);
-
-class HttpError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.name = "HttpError";
-        this.status = status;
-    }
-}
-
+const categoryUrl = new URL(baseUrl + `/api/v1/topics/category/${username}/`);
 
 const onoffMakeCategory = document.querySelector('#onoff-make-category');
 const makeCategoryContainer = document.querySelector('#make-category-container');
 const makeCategory = document.querySelector('#make-category');
 const cancelMakeCategory = document.querySelector('#cancel-make-category');
 const newCategory = document.querySelector('#new-category');
-
 const categoryList = document.querySelector('#category-list');
 
 document.addEventListener('click', function (event) {
@@ -105,21 +93,27 @@ document.addEventListener('selectstart', function (event) {
     if (event.target.tagName != 'INPUT') event.preventDefault();
 })
 
+
+checkLogin();
 loadCategory()
+
+
+function checkLogin() {
+    if (!username || !token) {
+        myAlert.showAlert('请登录！', () => {
+            localStorage.removeItem('blogToken');
+            localStorage.removeItem('username');
+            window.location.href = '/login-reg/';
+        })
+    } else if (username != visitedUsername) {
+        myAlert.showAlert('无访问权限！', () => {
+            window.location.href = `/${username}/topics/category/`;
+        });
+    }
+}
 
 function loadCategory() {
     (async () => {
-        if (!username || !token) {
-            myAlert.showAlert('请登录！', () => {
-                localStorage.removeItem('blogToken');
-                localStorage.removeItem('username');
-                window.location.href = '/login-reg/';
-            })
-        } else if (username != visitedUsername) {
-            myAlert.showAlert('无访问权限！', () => {
-                window.location.href = `/${username}/topics/category/`;
-            });
-        }
         const response = await fetch(categoryUrl, {
             headers: {
                 authorization: token
@@ -147,7 +141,6 @@ function loadCategory() {
                         a.textContent = c;
                     }
                     categoryList.append(li);
-
                 }
                 break;
             case 403:
@@ -220,6 +213,7 @@ function createCategory() {
         myAlert.showAlert(`分类 ${newCategory.value} 创建失败！`);
     }).then(() => makeCategory.disabled = false);
 }
+
 
 async function updateCategory(li, input, category) {
     if (blankStrRegexp.test(category)) {
