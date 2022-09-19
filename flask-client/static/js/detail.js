@@ -12,6 +12,7 @@ const topicId = window.location.href.match(/\/*\/topics\/detail\/([^\/]+)/)[1];/
 const E = window.wangEditor;
 const commentUrl = new URL(baseUrl + `/api/v1/comments/${topicId}/`);
 const topicUrl = new URL(baseUrl + `/api/v1/topics/${visitedUsername}/`);
+const thumbsUpUrl = new URL(baseUrl + `/api/v1/topics/thumbsUpNum/${topicId}/`);
 const defaultAvatarUrl = "/static/image/测试头像.png";//默认头像
 
 topicUrl.searchParams.set('topic_id', topicId);
@@ -88,6 +89,7 @@ function loadPage() {
             case 200:
                 loadTopic(jsonResponse);
                 loadAuthorCard(visitedUsername);
+                loadThumbsUp();
                 loadCommentSend();
                 loadCommentData();
                 loadReplySend();
@@ -118,6 +120,7 @@ function loadTopic(jsonResponse) {
     const createdTime = jsonResponse.data.created_time;
     const updatedTime = jsonResponse.data.updated_time;
     const viewNum = jsonResponse.data.view_num;
+    const thumbsUpNum = jsonResponse.data.thumbs_up_num
     const content = jsonResponse.data.content;
 
     const topicAuthor = document.querySelector('.topic-author-info')
@@ -151,7 +154,7 @@ function loadTopic(jsonResponse) {
     topicUpdatedTime.innerHTML = `<i class="fa fa-clock-o" aria-hidden="true"></i> 修改于:${updatedDate.getFullYear()}/${updatedDate.getMonth() + 1}/${updatedDate.getDate()}
              ${updatedDate.getHours()}:${updatedDate.getMinutes()}`;
     topicViewCount.innerHTML = `<i class="fa fa-eye" aria-hidden="true"></i> 浏览量:${viewNum}`;
-
+    topicThumbsUpCount.innerHTML = `<i class="fa fa-thumbs-o-up" aria-hidden="true"> 点赞量:${thumbsUpNum}</i>`;
     //过滤敏感标签
     const xssOption = {
         //使用默认标签白名单
@@ -177,6 +180,61 @@ function loadTopic(jsonResponse) {
     }
     const myXss = new filterXSS.FilterXSS(xssOption);
     editor.setHtml(myXss.process(content));
+}
+
+function loadThumbsUp() {
+    const thumbsUpButton = document.querySelector('#thumbs-up-container>i');
+    (async () => {
+        const response = await fetch(thumbsUpUrl, {
+            headers: {
+                authorization: token,
+            },
+        });
+        if (response.status != 200) throw new HttpError("Http error", response.status);
+        const jsonResponse = await response.json();
+        switch (jsonResponse.code) {
+            case 200:
+                const isThumbed = jsonResponse.data.is_thumbed;
+                if (isThumbed) {
+                    thumbsUpButton.style.color = 'rgb(95, 95, 238)';
+                }
+                else {
+                    thumbsUpButton.style.color = '';
+                }
+                break;
+            default:
+                throw new Error();
+        }
+    })().catch(function (error) {
+        console.log(error);
+    });
+    thumbsUpButton.onclick = function () {
+        (async () => {
+            const response = await fetch(thumbsUpUrl, {
+                method: 'PUT',
+                headers: {
+                    authorization: token,
+                },
+            });
+            if (response.status != 200) throw new HttpError("Http error", response.status);
+            const jsonResponse = await response.json();
+            switch (jsonResponse.code) {
+                case 200:
+                    const isThumbed = jsonResponse.data.is_thumbed;
+                    if (isThumbed) {
+                        thumbsUpButton.style.color = '';
+                    }
+                    else {
+                        thumbsUpButton.style.color = 'rgb(95, 95, 238)';
+                    }
+                    break;
+                default:
+                    throw new Error();
+            }
+        })().catch(function (error) {
+            console.log(error);
+        });
+    }
 }
 
 function loadCommentSend() {

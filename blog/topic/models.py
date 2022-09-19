@@ -31,6 +31,7 @@ class TopicViewNum(models.Model):
     class Meta:
         db_table = 'topic_topic_view_num'
 
+
 class TopicThumbsUpNum(models.Model):
     topic = models.OneToOneField(Topic, on_delete=models.CASCADE)
     count = models.IntegerField(verbose_name="点赞量")
@@ -39,3 +40,13 @@ class TopicThumbsUpNum(models.Model):
 
     class Meta:
         db_table = 'topic_topic_thumbs_up_num'
+
+
+class TopicThumbsUpUser(models.Model):
+    topic = models.OneToOneField(Topic, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'topic_topic_thumbs_up_user'

@@ -9,17 +9,45 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
+from django_redis import get_redis_connection
 
 from tools.cache_decorator import cache_set
 from .models import Category, Topic, TopicViewNum, TopicThumbsUpNum
 from user.models import UserProfile
-from tools.topic_counter import view_counter
+from tools.topic_counter import view_counter, return_thumbs_up_count, thumbs_up_counter, return_is_thumbed
 from tools.logging_decorator import logging_check, get_logging_user
 
 blank_str_regexp = re.compile("\s*$")  # 空白字符串匹配，包括''和' '
 
 
 # Create your views here.
+
+@logging_check
+def thumbs_up_view(request, topic_id):
+    # 对文章进行点赞操作
+    if request.method == 'GET':
+        user = request.logging_user
+        try:
+            Topic.objects.get(id=topic_id)
+        except:
+            result = {'code': 11200, 'error': '文章不存在！'}
+            return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
+        is_thumbed = return_is_thumbed(topic_id, user.username)
+        result = {'code': 200, 'data': {'is_thumbed': is_thumbed}}
+        return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
+    elif request.method == 'PUT':
+        user = request.logging_user
+        try:
+            Topic.objects.get(id=topic_id)
+        except:
+            result = {'code': 11201, 'error': '文章不存在！'}
+            return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
+        is_thumbed = thumbs_up_counter(topic_id, user.username)
+        result = {'code': 200, 'data': {'is_thumbed': is_thumbed}}
+        return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
+    else:
+        return HttpResponse(content='', content_type='text/html', status=405)
+
 
 def get_hot5_view(request):
     # 返回浏览量前五的相应数据
@@ -165,7 +193,7 @@ class CategoryView(View):
 class TopicView(View):
     # 增删改查文章信息
     @method_decorator(get_logging_user)
-    @method_decorator(cache_set(30))
+    # @method_decorator(cache_set(30))
     def get(self, request, visited_username):
         topic_id = request.GET.get('topic_id')
         if topic_id is not None:
@@ -210,10 +238,13 @@ class TopicView(View):
         # 清理缓存
         self.clear_topic_caches(request)
         # 删除redis存储的浏览量和点赞数
-        view_num_key = 'topic_%s_%s_view_num' % (user.username, topic.id)
-        thumbs_up_num_key = 'topic_%s_%s_thumbs_up_num' % (user.username, topic.id)
-        cache.delete(view_num_key)
-        cache.delete(thumbs_up_num_key)
+        view_num_key = 'topic_%s_view_num' % (topic_id)
+        thumbs_up_num_key = 'topic_%s_thumbs_up_num' % (topic_id)
+        thumbs_up_user_zset_key = 'topic_%s_thumbs_up_user_zset' % (topic_id)
+        r = get_redis_connection()
+        r.delete(view_num_key)
+        r.delete(thumbs_up_num_key)
+        r.delete(thumbs_up_user_zset_key)
         result = {'code': 200}
         return JsonResponse(result, json_dumps_params={'ensure_ascii': False})
 
@@ -271,12 +302,8 @@ class TopicView(View):
             return {'code': 10708, 'error': '文章发表失败！'}
         # 清理缓存
         self.clear_topic_caches(request)
-        # 使用redis存储浏览量和点赞数
+        # 浏览量+1
         view_counter(topic.id)
-        # view_num_key = 'topic_%s_view_num' % (user.username, topic.id)
-        # thumbs_up_num_key = 'topic_%s_thumbs_up_num' % (user.username, topic.id)
-        # cache.set(view_num_key, 0, None)
-        # cache.set(thumbs_up_num_key, 0, None)
         return {'code': 200, 'data': {'id': topic.id}}
 
     def handle_update_data(self, request, visited_username):
@@ -431,6 +458,7 @@ class TopicView(View):
                 # 文章权限为私有
                 return {'code': 10902, 'error': '无权限访问！'}
         view_num = view_counter(topic_id)
+        thumbs_up_num = return_thumbs_up_count(topic_id)
         try:
             data = {}
             data['is_same_user'] = True if (user == visited_user) else False
@@ -441,6 +469,7 @@ class TopicView(View):
             data['created_time'] = topic.created_time.timestamp()
             data['updated_time'] = topic.updated_time.timestamp()
             data['view_num'] = view_num if topic.limit == True else '---'  # 私有则不显示浏览量
+            data['thumbs_up_num'] = thumbs_up_num if topic.limit == True else '---'  # 私有则不显示点赞量
             data['content'] = topic.content
         except:
             return {'code': 10903, 'error': '获取文章数据失败！'}

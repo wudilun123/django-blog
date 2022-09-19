@@ -15,7 +15,7 @@
 .list-container>h1{
     text-align: center;
     padding-bottom: 10px;
-    color: #ff2929;
+    color: #ff4343;
 }
 .list-container>a{
     display: block;
@@ -27,6 +27,7 @@
     font-weight: 600;
     padding: 0 10px;
 }
+
 
 #last5-list-container{
     margin-top: 30px;

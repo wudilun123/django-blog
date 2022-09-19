@@ -1,8 +1,9 @@
 import re
+import time
 
 from django.test import TestCase
 
 # Create your tests here.
-a={}
-a['1']=None
-print(str(None))
+
+print(time.time())
+assert 0

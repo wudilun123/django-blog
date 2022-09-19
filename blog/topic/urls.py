@@ -8,4 +8,5 @@ urlpatterns = [
     path('<str:visited_username>/', views.TopicView.as_view()),
     path('ranking/hot5/', views.get_hot5_view),
     path('ranking/last5/', views.get_last5_view),
+    path('thumbsUpNum/<int:topic_id>/',views.thumbs_up_view),
 ]
