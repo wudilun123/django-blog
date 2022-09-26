@@ -33,18 +33,31 @@ function loadList(type) {
 }
 
 function makeListLink(data, type) {
-    let aArray;
+    let listContainer;
     if (type == 'hot5') {
-        aArray = Array.from(hot5ListContainer.querySelectorAll('a'));
+        listContainer = hot5ListContainer;
     } else if (type == 'last5') {
-        aArray = Array.from(last5ListContainer.querySelectorAll('a'));
+        listContainer = last5ListContainer;
     }
-    let count = 0;
-    for (let a of aArray) {
-        a.textContent = data[count].title;
-        const author = data[count].author;
-        const topicId = data[count].topic_id;
-        a.href = `/${author}/topics/detail/${topicId}/`;
+    let count = 0
+    console.log(data)
+    if (data) {
+        for (let d of data) {
+            const a = document.createElement('a');
+            const author = d.author;
+            const topicId = d.topic_id;
+            a.textContent = d.title
+            a.target = '_blank';
+            a.href = `/${author}/topics/detail/${topicId}/`;
+            listContainer.append(a);
+            count++;
+        }
+    }
+    while (count < 5) {
+        //使用空的div填充布局
+        const div = document.createElement('div');
+        div.style.flexGrow = 1;
+        listContainer.append(div);
         count++;
     }
 }

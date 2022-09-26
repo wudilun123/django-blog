@@ -8,7 +8,7 @@ import { blankStrRegexp, baseUrl, HttpError } from './settings.js'
 const username = localStorage.getItem('username');//当前登录用户
 const token = localStorage.getItem('blogToken');
 const blogContent = localStorage.getItem('blogContent');//将未提交的文章内容保存在本地存储中
-const blogText = localStorage.getItem('blogText');//使用text来检测是否为空文本
+let blogText = localStorage.getItem('blogText');//使用text来检测是否为空文本
 const myAlert = new MyAlert();
 const myConfirm = new MyConfirm();
 const visitedUsername = window.location.href.match(/\/([^\/]+)\/topic\/release/)[1];//当前页面所属用户
